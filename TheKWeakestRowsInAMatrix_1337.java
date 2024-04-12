@@ -2,8 +2,6 @@ package LeetCode;
 
 import java.util.*;
 
-import static javafx.scene.input.KeyCode.K;
-
 public class TheKWeakestRowsInAMatrix_1337 {
     public static int[] kWeakestRows(int[][] mat, int k) {
         if (mat == null || mat.length == 0 || mat[0].length == 0) {

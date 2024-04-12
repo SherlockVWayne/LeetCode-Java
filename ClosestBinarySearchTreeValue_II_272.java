@@ -33,4 +33,16 @@ public class ClosestBinarySearchTreeValue_II_272 {
         stack.push(root.val);
         inorder(reverse ? root.left : root.right, target, reverse, stack);
     }
+    
+    public static void main(String[] args) {
+        int a = 252;
+        int b = 105;
+        
+        while (a % b != 0) {
+            int temp = b;
+            b = Math.min(a % b, b);
+            a = Math.max(a % temp, temp);
+        }
+        System.out.println(b);
+    }
 }
