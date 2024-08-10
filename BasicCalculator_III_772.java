@@ -3,7 +3,7 @@ package LeetCode;
 import java.util.LinkedList;
 
 public class BasicCalculator_III_772 {
-    public int calculate(String s) {
+    public static int calculate(String s) {
         if (s == null || s.length() == 0) {
             return 0;
         }
@@ -16,7 +16,7 @@ public class BasicCalculator_III_772 {
         return calculate(queue);
     }
     
-    private int calculate(LinkedList<Character> queue) {
+    private static int calculate(LinkedList<Character> queue) {
         int num = 0;
         char prevOperator = '+';
         LinkedList<Integer> stack = new LinkedList<Integer>();
@@ -40,7 +40,7 @@ public class BasicCalculator_III_772 {
         return stack.stream().mapToInt(a -> a).sum();
     }
     
-    private void evaluate(LinkedList<Integer> stack, int num, char prevOperator) {
+    private static void evaluate(LinkedList<Integer> stack, int num, char prevOperator) {
         switch (prevOperator) {
             case '+':
                 stack.offerLast(num);
@@ -57,5 +57,9 @@ public class BasicCalculator_III_772 {
             default:
                 break;
         }
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(calculate("6-4/2"));
     }
 }

@@ -3,6 +3,8 @@ package LeetCode;
 import java.util.*;
 
 public class SongRecommendationSystem {
+    private static List<String> result;
+    
     public static class Song {
         String title;
         
