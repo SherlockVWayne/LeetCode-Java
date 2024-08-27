@@ -25,4 +25,19 @@ public class RemoveElement_27 {
         System.arraycopy(result, 0, nums, 0, validSize);
         return validSize;
     }
+    
+    public int removeElement_III(int[] nums, int val) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        
+        int slowPointer = 0;
+        for (int fastPointer = 0; fastPointer < nums.length; fastPointer++) {
+            if (val != nums[fastPointer]) {
+                nums[slowPointer] = nums[fastPointer];
+                slowPointer++;
+            }
+        }
+        return slowPointer;
+    }
 }

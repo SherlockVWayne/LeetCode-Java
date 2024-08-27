@@ -4,74 +4,6 @@ import java.util.*;
 
 public class WordLadder_II_126 {
     
-    public List<List<String>> findLadders_II(String beginWord, String endWord, List<String> wordList) {
-        Set<String> wordDict = new HashSet<>(wordList);
-        List<List<String>> results = new ArrayList<>();
-        if (!wordDict.contains(endWord))
-            return results;
-        
-        // Create a map to store the path from start to each node
-        Map<String, ArrayList<String>> map = new HashMap<>();
-        
-        // Use a set to store the words of current level
-        Set<String> currentLevel = new HashSet<>();
-        
-        // BFS to construct the path graph
-        boolean found = false;
-        currentLevel.add(beginWord);
-        while (!currentLevel.isEmpty() && !found) {
-            wordDict.removeAll(currentLevel); // Remove the used word in wordDict
-            Set<String> nextLevel = new HashSet<>();
-            for (String currentWord : currentLevel) {
-                ArrayList<String> nextWords = getNextWords(currentWord, wordDict);
-                for (String nextWord : nextWords) {
-                    if (nextWord.equals(endWord))
-                        found = true;
-                    map.putIfAbsent(nextWord, new ArrayList<>());
-                    map.get(nextWord).add(currentWord);
-                    nextLevel.add(nextWord);
-                }
-            }
-            currentLevel = nextLevel;
-        }
-        
-        // Backtrack to construct paths
-        if (found)
-            backtrack(endWord, beginWord, map, new ArrayList<>(), results);
-        
-        return results;
-    }
-    
-    private ArrayList<String> getNextWords(String word, Set<String> wordDict) {
-        ArrayList<String> nextWords = new ArrayList<>();
-        StringBuilder sb = new StringBuilder(word);
-        for (int i = 0; i < sb.length(); i++) {
-            char originalChar = sb.charAt(i);
-            for (char c = 'a'; c <= 'z'; c++) {
-                sb.setCharAt(i, c);
-                String newWord = sb.toString();
-                if (wordDict.contains(newWord))
-                    nextWords.add(newWord);
-            }
-            sb.setCharAt(i, originalChar);
-        }
-        return nextWords;
-    }
-    
-    private void backtrack(String word, String beginWord, Map<String, ArrayList<String>> map, ArrayList<String> temp,
-                           List<List<String>> results) {
-        temp.add(0, word);
-        if (word.equals(beginWord)) {
-            results.add(new ArrayList<>(temp));
-            temp.remove(0);
-            return;
-        }
-        for (String next : map.get(word)) {
-            backtrack(next, beginWord, map, temp, results);
-        }
-        temp.remove(0);
-    }
-    
     /**
      * High level design: BFS + DFS
      * Step 1: use BFS to build graph (adjacency list of each word), as well as calculating distance from beginWord to
@@ -165,10 +97,83 @@ public class WordLadder_II_126 {
     }
     
     public static void main(String[] args) {
-        List<List<String>> result = findLadders("hit", "cog", new ArrayList<String>(Arrays.asList("hot", "dot", "dog", "lot", "log", "cog")));
-        for (List<String> list : result) {
-            Print.printStringList(list);
-        }
+//        List<List<String>> result = findLadders("hit", "cog", new ArrayList<String>(Arrays.asList("hot", "dot", "dog", "lot", "log", "cog")));
+//        for (List<String> list : result) {
+//            Print.printStringList(list);
+//        }
+        
+        System.out.println(new WordLadder_II_126().findLadders_II("hit", "cog", new ArrayList<>(Arrays.asList("hot", "dot", "dog", "lot", "log", "cog"))));
     }
     
+    public List<List<String>> findLadders_II(String beginWord, String endWord, List<String> wordList) {
+        Set<String> wordDict = new HashSet<>(wordList);
+        List<List<String>> allPaths = new ArrayList<>();
+        if (!wordDict.contains(endWord)) {
+            return allPaths;
+        }
+        
+        // Create a map to store the path from start to each node
+        Map<String, List<String>> map = new HashMap<>();
+        
+        // Use a set to store the words of current level
+        Set<String> currentLevel = new HashSet<>();
+        
+        // BFS to construct the path graph
+        boolean found = false;
+        currentLevel.add(beginWord);
+        
+        while (!currentLevel.isEmpty() && !found) {
+            wordDict.removeAll(currentLevel); // Remove the used word in wordDict
+            Set<String> nextLevel = new HashSet<>();
+            for (String currentWord : currentLevel) {
+                List<String> nextWords = getNextLadder(currentWord, wordDict);
+                for (String nextWord : nextWords) {
+                    if (nextWord.equals(endWord))
+                        found = true;
+                    map.putIfAbsent(nextWord, new ArrayList<>());
+                    map.get(nextWord).add(currentWord);
+                    nextLevel.add(nextWord);
+                }
+            }
+            currentLevel = nextLevel;
+        }
+        
+        // Backtrack to construct paths
+        if (found) {
+            backtrack(endWord, beginWord, map, new ArrayList<>(), allPaths);
+        }
+        
+        return allPaths;
+    }
+    
+    private List<String> getNextLadder(String word, Set<String> wordDict) {
+        List<String> listOfNextLadder = new ArrayList<>();
+        char[] charArray = word.toCharArray();
+        
+        for (int i = 0; i < word.length(); i++) {
+            char originalChar = charArray[i];
+            for (int c = 'a'; c <= 'z'; c++) {
+                charArray[i] = (char) c;
+                String newWord = new String(charArray);
+                if (wordDict.contains(newWord)) {
+                    listOfNextLadder.add(newWord);
+                }
+            }
+            charArray[i] = (char) originalChar;
+        }
+        return listOfNextLadder;
+    }
+    
+    private void backtrack(String currWord, String beginWord, Map<String, List<String>> map, List<String> currPath, List<List<String>> allPaths) {
+        currPath.add(0, currWord);
+        if (currWord.equals(beginWord)) {
+            allPaths.add(new ArrayList<>(currPath));
+            currPath.remove(0);
+            return;
+        }
+        for (String next : map.get(currWord)) {
+            backtrack(next, beginWord, map, currPath, allPaths);
+        }
+        currPath.remove(0);
+    }
 }

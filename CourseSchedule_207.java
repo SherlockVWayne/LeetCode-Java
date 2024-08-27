@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CourseSchedule_207 {
-    public static boolean canFinish(int n, int[][] prerequisites) {
-        ArrayList<Integer>[] graph = new ArrayList[n];
-        // List<Integer>[] graph = new ArrayList[n];
+    public static boolean canFinish(int numCourses, int[][] prerequisites) {
+        // BFS
+        ArrayList<Integer>[] graph = new ArrayList[numCourses];
+        // List<Integer>[] graph = new ArrayList[numCourses];
         // Unchecked assignment: 'java.util.ArrayList[]' to 'java.util.List<java.lang.Integer>[]'
-        int[] degree = new int[n];
-        List<Integer> result = new ArrayList<Integer>();
+        int[] degree = new int[numCourses];
+        List<Integer> coursesCanFinish = new ArrayList<Integer>();
         
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < numCourses; i++) {
             graph[i] = new ArrayList<Integer>();
         }
         
@@ -20,26 +21,28 @@ public class CourseSchedule_207 {
             degree[pre[0]]++;
         }
         
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < numCourses; i++) {
             if (degree[i] == 0) {
-                result.add(i);
+                // 1. Choose a vertex with in-degree 0
+                coursesCanFinish.add(i);
             }
         }
         
-        for (int i = 0; i < result.size(); i++) {
-            for (int course : graph[result.get(i)]) {
-                if (--degree[course] == 0) {
-                    result.add(course);
-                    // degree[course]--;
+        for (int i = 0; i < coursesCanFinish.size(); i++) {
+            for (int course : graph[coursesCanFinish.get(i)]) {
+                // 3. Remove from graph and update in-degrees
+                degree[course] -= 1;
+                if (degree[course] == 0) {
+                    // 1. Choose a vertex with in-degree 0
+                    coursesCanFinish.add(course);
+                    // 2. Add it to the sorted list of vertices
                 }
             }
         }
-        
-        return result.size() == n;
-        
-        // O(N + Edges)
-        // N: number of classes
+        return coursesCanFinish.size() == numCourses;
     }
+    // O(N + Edges)
+    // N: number of classes
     
     public static void main(String[] args) {
         System.out.println(canFinish(4, new int[][]{

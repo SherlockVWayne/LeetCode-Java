@@ -1,7 +1,7 @@
 package LeetCode;
 
 public class LongestPalindromicSubstring_5 {
-    public String longestPalindrome(String s) {
+    public static String longestPalindrome(String s) {
         if (s == null || s.length() == 0) return "";
         
         int start = 0;
@@ -21,10 +21,10 @@ public class LongestPalindromicSubstring_5 {
             }
         }
         
-        return s.substring(start, end + 1); // [start, end + 1)
+        return s.substring(start, end + 1); // [start, end]
     }
     
-    public int expandFromMiddle(String s, int left, int right) {
+    public static int expandFromMiddle(String s, int left, int right) {
         if (s == null || left > right) return 0;
         while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
             left--;

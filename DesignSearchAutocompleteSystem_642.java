@@ -1,41 +1,43 @@
 package LeetCode;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+class TrieNode implements Comparable<TrieNode> {
+    String sentence;
+    TrieNode[] children;
+    List<TrieNode> hotSentences; // contains the top 3 hot freq string list
+    int times;
+    
+    public TrieNode() {
+        this.sentence = null;
+        this.children = new TrieNode[128];
+        this.hotSentences = new ArrayList<TrieNode>();
+        this.times = 0;
+    }
+    
+    public int compareTo(TrieNode trieNode) {
+        if (this.times == trieNode.times) {
+            return this.sentence.compareTo(trieNode.sentence);
+        }
+        
+        return trieNode.times - this.times; // des high -> low
+    }
+    
+    public void update(TrieNode trieNode) {
+        if (!this.hotSentences.contains(trieNode)) {
+            this.hotSentences.add(trieNode);
+        }
+        Collections.sort(hotSentences);
+        if (hotSentences.size() > 3) {
+            hotSentences.remove(hotSentences.size() - 1);
+        }
+    }
+}
 
 public class DesignSearchAutocompleteSystem_642 {
     class AutocompleteSystem {
-        private class TrieNode implements Comparable<TrieNode> {
-            String sentence;
-            TrieNode[] children;
-            List<TrieNode> hotSentences; // contains the top 3 hot freq string list
-            int times;
-            
-            public TrieNode() {
-                this.sentence = null;
-                this.children = new TrieNode[128];
-                this.hotSentences = new ArrayList<TrieNode>();
-                this.times = 0;
-            }
-            
-            public int compareTo(TrieNode trieNode) {
-                if (this.times == trieNode.times) {
-                    return this.sentence.compareTo(trieNode.sentence);
-                }
-                
-                return trieNode.times - this.times; // des high -> low
-            }
-            
-            public void update(TrieNode trieNode) {
-                if (!this.hotSentences.contains(trieNode)) {
-                    this.hotSentences.add(trieNode);
-                }
-                Collections.sort(hotSentences);
-                if (hotSentences.size() > 3) {
-                    hotSentences.remove(hotSentences.size() - 1);
-                }
-            }
-        }
-        
         private TrieNode root;
         private TrieNode curr;
         private StringBuilder sb; // how many chars are put
