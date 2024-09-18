@@ -1,38 +1,47 @@
 package LeetCode;
 
 public class LongestIncreasingPathInAMatrix_329 {
-    public static final int[][] dirs = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+    private int[][] dirs = new int[][]{{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
     
     public int longestIncreasingPath(int[][] matrix) {
-        int maxLength = 0;
+        if (matrix == null || matrix.length == 0) {
+            return 0;
+        }
+        
+        int maxPathLength = 0;
         int[][] cache = new int[matrix.length][matrix[0].length];
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
-                int increasingLength = dfs(matrix, i, j, cache);
-                maxLength = Math.max(maxLength, increasingLength);
+                int currPathLength = dfs(matrix, i, j, 1, cache);
+                maxPathLength = Math.max(maxPathLength, currPathLength);
             }
         }
-        return maxLength;
+        return maxPathLength;
     }
     
-    private int dfs(int[][] matrix, int i, int j, int[][] cache) {
+    private boolean isInRange(int[][] matrix, int i, int j) {
+        return i >= 0 && i < matrix.length && j >= 0 && j < matrix[0].length;
+    }
+    
+    private int dfs(int[][] matrix, int i, int j, int currPathLength, int[][] cache) {
+        if (!isInRange(matrix, i, j)) {
+            return currPathLength;
+        }
         if (cache[i][j] != 0) {
             return cache[i][j];
         }
-        
-        int maxLength = 1;
+        int maxPathLength = currPathLength;
         for (int[] dir : dirs) {
-            int x = i + dir[0];
-            int y = j + dir[1];
-            if (x < 0 || x >= matrix.length || y < 0 || y >= matrix[0].length
-                || matrix[x][y] <= matrix[i][j]) {
-                continue;
+            int newI = i + dir[0];
+            int newJ = j + dir[1];
+            int newPathLength = 0;
+            if (isInRange(matrix, newI, newJ) && matrix[newI][newJ] > matrix[i][j]) {
+                newPathLength = 1 + dfs(matrix, newI, newJ, currPathLength, cache);
             }
-            int length = 1 + dfs(matrix, x, y, cache);
-            maxLength = Math.max(maxLength, length);
+            maxPathLength = Math.max(newPathLength, maxPathLength);
         }
-        cache[i][j] = maxLength;
-        return maxLength;
+        cache[i][j] = maxPathLength;
+        return maxPathLength;
     }
 }
 /**

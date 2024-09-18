@@ -1,37 +1,40 @@
 package LeetCode;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class BuddyStrings_859 {
-    public boolean buddyStrings(String A, String B) {
-        if (A.length() != B.length()) return false;
-
-        if (A.equals(B)) {
-            HashSet<Character> uniqueChars = new HashSet();
-            for (char c : A.toCharArray()) {
+    public static void main(String[] args) {
+        System.out.println(new BuddyStrings_859().buddyStrings("abcd", "cbad"));
+    }
+    
+    public boolean buddyStrings(String s, String goal) {
+        if (s.length() != goal.length()) return false;
+        
+        if (s.equals(goal)) {
+            Set<Character> uniqueChars = new HashSet<>();
+            for (char c : s.toCharArray()) {
                 uniqueChars.add(c);
             }
-            if (uniqueChars.size() < A.length()) {
+            if (uniqueChars.size() < s.length()) {
                 return true;
             } else {
                 return false;
             }
         }
-
-        List<Integer> difference = new ArrayList();
-        for (int i = 0; i < A.length(); i ++) {
-            if (A.charAt(i) != B.charAt(i)) {
+        
+        List<Integer> difference = new ArrayList<>();
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) != goal.charAt(i)) {
                 difference.add(i);
             }
         }
-
-        if (difference.size() == 2 &&
-                A.charAt(difference.get(0)) == B.charAt(difference.get(1)) &&
-                B.charAt(difference.get(0)) == A.charAt(difference.get(1))
-        ){
-            return true;
-        } else {
-            return false;
-        }
+        
+        return difference.size() == 2 &&
+            s.charAt(difference.get(0)) == goal.charAt(difference.get(1)) &&
+            goal.charAt(difference.get(0)) == s.charAt(difference.get(1));
     }
+    
 }
