@@ -26,10 +26,11 @@ public class MostProfitAssigningWork_826 {
         for (int i = 0; i < difficulty.length; i++) {
             map.put(difficulty[i], Math.max(profit[i], map.getOrDefault(difficulty[i], 0)));
         }
-        int best = 0, result = 0;
+        int bestProfitForDifficulty = 0;
+        int result = 0;
         for (Integer key : map.keySet()) {
-            best = Math.max(map.get(key), best);
-            map.put(key, best);
+            bestProfitForDifficulty = Math.max(map.get(key), bestProfitForDifficulty);
+            map.put(key, bestProfitForDifficulty);
         }
         // 0 ->  0
         // 35 ->  17

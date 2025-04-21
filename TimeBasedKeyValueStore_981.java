@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 class Data {
-    String val;
-    int time;
+    String value;
+    int timestamp;
     
-    Data(String val, int time) {
-        this.val = val;
-        this.time = time;
+    Data(String value, int timestamp) {
+        this.value = value;
+        this.timestamp = timestamp;
     }
 }
 
@@ -30,7 +30,9 @@ public class TimeBasedKeyValueStore_981 {
         }
         
         public void set(String key, String value, int timestamp) {
-            if (!map.containsKey(key)) map.put(key, new ArrayList<Data>());
+            if (!map.containsKey(key)) {
+                map.put(key, new ArrayList<Data>());
+            }
             map.get(key).add(new Data(value, timestamp));
         }
         
@@ -39,17 +41,23 @@ public class TimeBasedKeyValueStore_981 {
             return binarySearch(map.get(key), timestamp);
         }
         
-        protected String binarySearch(List<Data> list, int time) {
-            int low = 0, high = list.size() - 1;
-            while (low < high) {
-                int mid = (low + high) >> 1;
-                if (list.get(mid).time == time) return list.get(mid).val;
-                if (list.get(mid).time < time) {
-                    if (list.get(mid + 1).time > time) return list.get(mid).val;
-                    low = mid + 1;
-                } else high = mid - 1;
+        private String binarySearch(List<Data> list, int timestamp) {
+            int left = 0;
+            int right = list.size() - 1;
+            while (left < right) {
+                int middle = (left + right) >> 1;
+                if (list.get(middle).timestamp == timestamp) {
+                    return list.get(middle).value;
+                } else if (list.get(middle).timestamp < timestamp) {
+                    if (list.get(middle + 1).timestamp > timestamp) {
+                        return list.get(middle).value;
+                    }
+                    left = middle + 1;
+                } else {
+                    right = middle - 1;
+                }
             }
-            return list.get(low).time <= time ? list.get(low).val : "";
+            return list.get(left).timestamp <= timestamp ? list.get(left).value : "";
         }
     }
 }

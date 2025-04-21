@@ -1,7 +1,6 @@
 package LeetCode;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -28,16 +27,18 @@ public class MaximumProfitInJobScheduling_1235 {
     }
     
     public int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
-        List<Job> jobs = new ArrayList<>();
+        List<Job> jobsList = new ArrayList<>();
         for (int i = 0; i < startTime.length; i++) {
             Job job = new Job(startTime[i], endTime[i], profit[i]);
-            jobs.add(job);
+            jobsList.add(job);
         }
-        Collections.sort(jobs, (a, b) -> a.start - b.start);
+        jobsList.sort((a, b) -> a.start - b.start);
         int currentProfit = 0;
+        // max total profit can have from any combination of jobs
+        // that FINISH STRICTLY BEFORE the next job’s start time
         int maxProfit = 0;
-        PriorityQueue<Job> pq = new PriorityQueue<>(jobs.size(), (a, b) -> a.end - b.end);
-        for (Job job : jobs) {
+        PriorityQueue<Job> pq = new PriorityQueue<>(jobsList.size(), (a, b) -> a.end - b.end);
+        for (Job job : jobsList) {
             while (!pq.isEmpty() && pq.peek().end <= job.start) {
                 currentProfit = Math.max(currentProfit, pq.peek().profit);
                 pq.poll();
@@ -53,3 +54,34 @@ public class MaximumProfitInJobScheduling_1235 {
         return maxProfit;
     }
 }
+// TC: O(nlogn) -> sort
+// SC: O(n) -> worst case, pq is full
+
+// jobsList:
+// 1   3   20
+// 2   5   20
+// 3  10  100
+// 4   6   70
+// 6   9   60
+
+// pq:
+// 1   3   20
+// 2   5   20
+
+// pq:
+// 1   3   20 <- 3  10  100
+// 2   5   20
+
+// pq:
+// 2   5   20 <- 6   9   60
+// 3  10  120
+// 4   6   70
+
+// pq:
+// 6   9   80
+// 4   6   70 < heap top <- 6   9   80
+// 3  10  120
+
+// pq:
+// 6   9  150 < heap top
+// 3  10  120

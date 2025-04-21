@@ -15,10 +15,10 @@ public class RottingOranges_994 {
         }
         
         int minutes = 2;
-        for (int[] row : grid) {
-            for (int cell : row) {
-                if (cell == 1) return -1;
-                minutes = Math.max(minutes, cell);
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == 1) return -1;
+                minutes = Math.max(minutes, grid[i][j]);
             }
         }
         
